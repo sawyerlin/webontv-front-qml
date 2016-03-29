@@ -1,11 +1,21 @@
 import QtQuick 2.2
+import fbx.application 1.0
 
-Rectangle {
-    width: 200
-    height: 100
-    color: "red"
+Application {
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+    }
     Text {
-        anchors.centerIn: parent
-        text: "Hello, World!"
+        focus: true
+        anchors.centerIn: parent 
+
+        text: "Rock'n Roll"
+        color: "white"
+        font.pixelSize: 40
+
+        Keys.onPressed: {
+            Qt.quit()
+        }
     }
 }
