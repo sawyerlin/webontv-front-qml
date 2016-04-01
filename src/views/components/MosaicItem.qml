@@ -1,26 +1,31 @@
 import QtQuick 2.2
 
 Rectangle {
-    property alias name: name.text
-    property alias type: type.text
+    property string name: ""
+    property string type: ""
+    property int margin: 0
     property alias background: image.source
-    width: 352
-    height: 182
+    property int innerWidth: 0
+    property int innerHeight: 0
     Image {
         id: image
-        fillMode: Image.PreserveAspectFit
+        fillMode: Image.Stratch
         cache: true
-        width: 352
-        height: 182
+        anchors.left: parent.left
+        anchors.leftMargin: margin
+        anchors.top: parent.top
+        anchors.topMargin: margin
+        height: innerHeight
+        width: innerWidth
         Rectangle {
             color: "black"
             opacity: 0.8
-            width: 352
+            width: innerWidth
             height: 65
             anchors.horizontalCenter: image.horizontalCenter
             anchors.bottom: image.bottom
             Text {
-                id: name 
+                text: name
                 color: "white"
                 font.bold: true
                 font.pixelSize: 20
@@ -30,7 +35,7 @@ Rectangle {
                 anchors.topMargin: 10
             }
             Text {
-                id: type
+                text: type
                 color: "white"
                 font.bold: true
                 font.pixelSize: 13
