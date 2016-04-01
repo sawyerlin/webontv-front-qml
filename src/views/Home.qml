@@ -1,10 +1,8 @@
 import QtQuick 2.2
 
-import "../source"
 import "components"
 
 Rectangle {
-    id: homeView
     property int borderWidth: 5
     property int gridViewLeftMargin: 88
     property int gridViewTopMargin: 85
@@ -18,6 +16,7 @@ Rectangle {
     property string imageServer: "http://fo-orange-preprod.hubee.tv/elts/"
     property string imageBackground: "../images/homepage_bg.jpg"
     property string imageLogo: "../images/homepage_logo.png"
+    property variant source: undefined
 
     property int rowSize: Math.floor((parent.width - gridViewLeftMargin) / gridViewItemWidth);
     property int rowIndex: Math.floor(focus.index / rowSize)
@@ -52,7 +51,6 @@ Rectangle {
                 innerWidth: gridViewItemInnerWidth
                 innerHeight: gridViewItemInnerHeight
             }
-            Source {id: source}
             Component.onCompleted: {
                 source.getChannels(function(result) {
                     if (result) {
@@ -133,7 +131,7 @@ Rectangle {
             }
             break
             case Qt.Key_Return: 
-            console.log("TODO: return");
+            parent.play(homeModel.get(focus.index).id);
             break;
             default:
             break;
@@ -149,7 +147,7 @@ Rectangle {
         }
     }
     function updateMarginTopScrollDown() {
-        var top = homeView.height - marginTop - (rowIndex + 1) * gridViewItemHeight - gridViewTopMargin - gridViewBottomMargin;
+        var top = parent.height - marginTop - (rowIndex + 1) * gridViewItemHeight - gridViewTopMargin - gridViewBottomMargin;
         if (top < 0) {
             marginTop = top + marginTop;
         } else {
