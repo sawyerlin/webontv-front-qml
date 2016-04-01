@@ -1,7 +1,7 @@
 import QtQuick 2.2
 
 Rectangle {
-    property string name: ""
+    property alias name: name.text
     property string type: ""
     property int margin: 0
     property alias background: image.source
@@ -9,7 +9,6 @@ Rectangle {
     property int innerHeight: 0
     Image {
         id: image
-        fillMode: Image.Stratch
         cache: true
         anchors.left: parent.left
         anchors.leftMargin: margin
@@ -25,7 +24,7 @@ Rectangle {
             anchors.horizontalCenter: image.horizontalCenter
             anchors.bottom: image.bottom
             Text {
-                text: name
+                id: name
                 color: "white"
                 font.bold: true
                 font.pixelSize: 20
