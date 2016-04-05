@@ -21,7 +21,6 @@ Item {
 
     function getChannelById(channelId, callback) {
         var url = server + "/Channels/getChannelById.json?channelId=" + channelId;
-        console.log(url);
         var xhr = new XMLHttpRequest;
         xhr.open("GET", url);
         xhr.onreadystatechange = function() {

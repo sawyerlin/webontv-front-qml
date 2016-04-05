@@ -25,7 +25,6 @@ Rectangle {
     function play(channelId) {
         source.getChannelById(channelId, function(result) {
             playerView.channel = result;
-            console.log(result);
         });
         homeView.focus = false;
         homeView.visible = false;
