@@ -24,12 +24,12 @@ Rectangle {
     }
     function play(channelId) {
         source.getChannelById(channelId, function(result) {
-            playerView.channel = result;
+            homeView.focus = false;
+            homeView.visible = false;
+            playerView.focus = true;
+            playerView.visible = true;
+            playerView.play(result.Channel);
         });
-        homeView.focus = false;
-        homeView.visible = false;
-        playerView.focus = true;
-        playerView.visible = true;
     }
     function back() {
         homeView.focus = true;

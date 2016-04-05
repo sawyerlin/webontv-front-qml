@@ -4,8 +4,6 @@ import QtMultimedia 5.2
 import "components"
 
 Rectangle {
-    property variant source: undefined
-    property variant channel: undefined
     id: videoVeiw
     anchors.fill: parent
     color: "black"
@@ -13,29 +11,50 @@ Rectangle {
         id: video
         anchors.fill: parent
         source: "../videos/BigBuckBunny.avi"
+        onPositionChanged: {
+            videoController.updateCurrentPosition(video.position, video.duration);
+        }
     }
     VideoController {
         id: videoController
     }
     Keys.onPressed: {
         switch (event.key) {
-            case Qt.Key_Backspace:
-            parent.back();
-            break;
             case Qt.Key_Return:
-            switch (video.playbackState) {
-                case MediaPlayer.PlayingState:
-                video.pause();
+            switch (videoController.currentIndex) {
+                case 0:
+                videoController.updatePlayback(false);
+                video.stop();
+                parent.back();
                 break;
-                case MediaPlayer.PausedState:
-                video.play();
+                case 1:
+                var pause = false;
+                switch (video.playbackState) {
+                    case MediaPlayer.PlayingState:
+                    pause = true;
+                    video.pause();
+                    break;
+                    case MediaPlayer.PausedState:
+                    pause = false;
+                    video.play();
+                    break;
+                }
+                videoController.updatePlayback(pause);
                 break;
-                case MediaPlayer.StoppedState:
-                video.play();
+                case 2:
+                // TODO: change quality
+                break;
+                case 3:
+                // TODO: show vod home
                 break;
             }
             default:
+            videoController.move(event.key);
             break;
         }
+    }
+    function play(chanel) {
+        video.play();
+        videoController.init(chanel, video.duration);
     }
 }
