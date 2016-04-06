@@ -1,9 +1,11 @@
 import QtQuick 2.2
 
+import "controller"
 import "mediaelements"
 
 Item {
     property int currentIndex: 0
+    property alias duration: timeline.duration
     property string imageServerPath: undefined 
     anchors.bottom: parent.bottom
     anchors.left: parent.left
@@ -14,51 +16,13 @@ Item {
         color: "black"
         opacity: 0.7
     }
-    Item {
+    NextVideoController {
         id: videoNext
+        anchors.left: infoItem.right
         anchors.top: parent.top
         anchors.topMargin: 100
         anchors.right: parent.right
-        anchors.left: infoItem.right
         anchors.bottom: parent.bottom
-        Item {
-            anchors.fill: parent
-            anchors.leftMargin: 45
-            anchors.rightMargin: 45
-            anchors.bottomMargin: 10
-            clip: true
-            Rectangle {
-                id: imageRect
-                anchors.fill: parent
-                border.width: 5
-                border.color: "transparent"
-                color: "transparent"
-                anchors.bottomMargin: 45
-                Image {
-                    id: videoNextImage
-                    anchors.fill: parent
-                    anchors.leftMargin: 5
-                    anchors.rightMargin: 5
-                    anchors.bottomMargin: 5
-                    anchors.topMargin: 5
-                }
-            }
-            Text {
-                id: videoNextText
-                anchors.top: imageRect.bottom
-                text: "vidéo suivante"
-                font.bold: true
-                color: "white"
-            }
-            Text {
-                id: videoNextName
-                anchors.top: videoNextText.bottom
-                font.pixelSize: 25
-                font.bold: true
-                color: "white"
-                wrapMode: Text.WordWrap
-            }
-        }
     }
     Item {
         id: infoItem
@@ -120,57 +84,20 @@ Item {
             }
         }
     }
-    Item {
+    Timeline {
+        id: timeline
         anchors.top: infoItem.bottom
         anchors.topMargin: 40
         anchors.left: infoItem.left
         anchors.right: infoItem.right
-        Item {
-            id: timeItem
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 25
-            Text {
-                id: currentPosition
-                font.pixelSize: 25
-                font.bold: true
-                color: "white"
-                text: "00:00:00"
-            }
-            Text {
-                id: duration
-                anchors.right: parent.right
-                anchors.top: parent.top
-                font.pixelSize: 25
-                font.bold: true
-                color: "white"
-                text: "00:35:09"
-            }
-        }
-        Rectangle {
-            anchors.top: timeItem.bottom
-            anchors.topMargin: 5
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 10
-            color: "gray"
-            Rectangle {
-                id: timeline
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                color: "white"
-            }
-        }
     }
-    function init(chanel, ms, program) {
-        duration.text = timeFromMS(ms);
-        logo.source = this.imageServerPath + chanel.logoLiveFilepath;
-        chanelName.text = chanel.name;
-        programName.text = program.ProgramToPlay.title;
-        videoNextImage.source = this.imageServerPath + program.NextProgram.imageFilepath;
-        videoNextName.text = program.NextProgram.title;
+    function init(data) {
+        //duration.text = timeFromMS(ms);
+        logo.source = data.logo;
+        chanelName.text = data.chanelName;
+        programName.text = data.program.name;
+        videoNext.imageSource = data.nextProgram.imageSource;
+        videoNext.name = data.nextProgram.text;
     }
     function move(key) {
         switch (key) {
@@ -231,26 +158,8 @@ Item {
             iconplayback.positionX = -107;
         }
     }
-    function updateCurrentPosition(position, duration) {
-        currentPosition.text = timeFromMS(position);
-        timeline.width = Math.floor(position / duration * infoItem.width);
-    }
-    function timeFromMS(ms) {
-        var sec_num = Math.floor(ms / 1000);
-        var hours = Math.floor(sec_num / 3600);
-        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-        var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-        if (hours < 10) {
-            hours = "0" + hours;
-        }
-        if (minutes < 10) {
-            minutes = "0" + minutes;
-        }
-        if (seconds < 10) {
-            seconds = "0" + seconds;
-        }
-        var time = hours + ':' + minutes + ':' + seconds;
-        return time;
+    function updateCurrentPosition(position) {
+        timeline.positionTime = position;
+        timeline.position = Math.floor(position / duration * timeline.width);
     }
 }

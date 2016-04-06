@@ -6,20 +6,22 @@ import "components"
 View {
     property variant source: undefined
     property string imageServerPath: undefined
+
     signal back()
+
     anchors.fill: parent
-    onHiden: videoController.focus = false
-    onShown: videoController.focus = true
     color: "black"
+    onHiden: {
+        videoController.updateCurrentPosition(0);
+        videoController.focus = false;
+    }
+    onShown: videoController.focus = true
     Video {
         id: video
         anchors.fill: parent
         autoPlay: true
-        onPlaying: {
-        }
-        onPositionChanged: {
-            videoController.updateCurrentPosition(video.position, video.duration);
-        }
+        onDurationChanged: videoController.duration = video.duration
+        onPositionChanged: videoController.updateCurrentPosition(video.position)
     }
     VideoController {
         id: videoController 
@@ -60,11 +62,9 @@ View {
             }
         }
     }
-    function play(chanel, program) {
-        for (var videoId in program.ProgramToPlay.Videos) {
-            video.source = program.ProgramToPlay.Videos[videoId].filepath;
-            break;
-        }
-        videoController.init(chanel, video.duration, program);
+    function play(data) {
+        video.source = data.program.source;
+        video.play();
+        videoController.init(data);
     }
 }

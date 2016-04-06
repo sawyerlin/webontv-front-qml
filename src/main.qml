@@ -24,9 +24,29 @@ Rectangle {
         imageServerPath: config.imageServerPath
         onPlay:  {
             source.getChannelById(chanelId, function(result) {
-                showView(playerView);
+                var chanel = result.Channel;
+                console.log(chanel.name);
                 source.getProgramToPlay(chanelId, function(program) {
-                    playerView.play(result.Channel, program);
+                    // TODO: put this code into the source file
+                    var data = {
+                        chanelName: chanel.name,
+                        logo: config.imageServerPath + chanel.logoLiveFilepath,
+                        program: {
+                            name: program.ProgramToPlay.title,
+                            source: (function() { 
+                                // TODO: get the right source
+                                for (var videoId in program.ProgramToPlay.Videos) {
+                                    return program.ProgramToPlay.Videos[videoId].filepath;
+                                }
+                            })()
+                        },
+                        nextProgram: {
+                            imageSource: config.imageServerPath + program.NextProgram.imageFilepath,
+                            text: program.NextProgram.title
+                        }
+                    };
+                    playerView.play(data);
+                    showView(playerView);
                 });
             });
         }
