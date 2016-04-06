@@ -1,40 +1,60 @@
 import QtQuick 2.2
 import fbx.application 1.0
 
-import "views"
+import "config"
 import "source"
+import "views"
 
 Rectangle {
     property int applicationWidth: 1280
     property int applicationHeight: 720
+    property variant lastView: undefined
+    property variant currentView: homeView
+    property variant views: [homeView, playerView]
     width: applicationWidth
     height: applicationHeight
     color: "white"
-    Source {id: source}
+    Config {id: config}
+    Source {
+        id: source
+        config: config
+    }
     Home {
-        id: homeView
-        focus: true
-        visible: true
+        id: homeView 
+        imageServerPath: config.imageServerPath
+        onPlay:  {
+            source.getChannelById(chanelId, function(result) {
+                showView(playerView);
+                source.getProgramToPlay(chanelId, function(program) {
+                    playerView.play(result.Channel, program);
+                });
+            });
+        }
         source: source
     }
     Player {
         id: playerView
-        focus: false
-        visible: false
+        imageServerPath: config.imageServerPath
+        onBack: {
+            showView(lastView);
+        }
+        source: source
     }
-    function play(channelId) {
-        source.getChannelById(channelId, function(result) {
-            homeView.focus = false;
-            homeView.visible = false;
-            playerView.focus = true;
-            playerView.visible = true;
-            playerView.play(result.Channel);
-        });
+    Component.onCompleted: {
+        showView(homeView);
     }
-    function back() {
-        homeView.focus = true;
-        homeView.visible = true;
-        playerView.focus = false;
-        playerView.visible = false;
+    function showView(view) {
+        if (view) {
+            lastView = currentView;
+            for (var index in views) {
+                if (views[index] == view) {
+                    continue;
+                }
+                views[index].hide();
+            }
+            if (view) {
+                view.show();
+            }
+        }
     }
 }

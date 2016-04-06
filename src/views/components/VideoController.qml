@@ -4,7 +4,7 @@ import "mediaelements"
 
 Item {
     property int currentIndex: 0
-    property string imageServer: "http://fo-orange-preprod.hubee.tv/elts/"
+    property string imageServerPath: undefined 
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right: parent.right
@@ -13,6 +13,52 @@ Item {
         anchors.fill: parent;
         color: "black"
         opacity: 0.7
+    }
+    Item {
+        id: videoNext
+        anchors.top: parent.top
+        anchors.topMargin: 100
+        anchors.right: parent.right
+        anchors.left: infoItem.right
+        anchors.bottom: parent.bottom
+        Item {
+            anchors.fill: parent
+            anchors.leftMargin: 45
+            anchors.rightMargin: 45
+            anchors.bottomMargin: 10
+            clip: true
+            Rectangle {
+                id: imageRect
+                anchors.fill: parent
+                border.width: 5
+                border.color: "transparent"
+                color: "transparent"
+                anchors.bottomMargin: 45
+                Image {
+                    id: videoNextImage
+                    anchors.fill: parent
+                    anchors.leftMargin: 5
+                    anchors.rightMargin: 5
+                    anchors.bottomMargin: 5
+                    anchors.topMargin: 5
+                }
+            }
+            Text {
+                id: videoNextText
+                anchors.top: imageRect.bottom
+                text: "vidéo suivante"
+                font.bold: true
+                color: "white"
+            }
+            Text {
+                id: videoNextName
+                anchors.top: videoNextText.bottom
+                font.pixelSize: 25
+                font.bold: true
+                color: "white"
+                wrapMode: Text.WordWrap
+            }
+        }
     }
     Item {
         id: infoItem
@@ -38,7 +84,7 @@ Item {
                 color: "white"
             }
             Text {
-                id: chanelType
+                id: programName
                 anchors.top: chanelName.bottom
                 anchors.topMargin: 5
                 font.pixelSize: 25
@@ -76,7 +122,7 @@ Item {
     }
     Item {
         anchors.top: infoItem.bottom
-        anchors.topMargin: 20
+        anchors.topMargin: 40
         anchors.left: infoItem.left
         anchors.right: infoItem.right
         Item {
@@ -118,11 +164,13 @@ Item {
             }
         }
     }
-    function init(chanel, ms) {
+    function init(chanel, ms, program) {
         duration.text = timeFromMS(ms);
-        logo.source = imageServer + chanel.logoLiveFilepath;
+        logo.source = this.imageServerPath + chanel.logoLiveFilepath;
         chanelName.text = chanel.name;
-        chanelType.text = chanel.genre;
+        programName.text = program.ProgramToPlay.title;
+        videoNextImage.source = this.imageServerPath + program.NextProgram.imageFilepath;
+        videoNextName.text = program.NextProgram.title;
     }
     function move(key) {
         switch (key) {
@@ -140,8 +188,13 @@ Item {
                 iconquality.positionY= 0;
                 iconvod.positionY= -44;
                 break;
+                case 3:
+                imageRect.color = "white";
+                imageRect.border.color = "white";
+                iconvod.positionY = 0;
+                break;
             }
-            if (currentIndex < 3) {
+            if (currentIndex < 4) {
                 currentIndex ++;
             }
             break;
@@ -153,11 +206,16 @@ Item {
                 break;
                 case 2:
                 iconplayback.positionY = -44;
-                iconquality.positionY= 0;
+                iconquality.positionY = 0;
                 break;
                 case 3:
-                iconquality.positionY= -44;
-                iconvod.positionY= 0;
+                iconquality.positionY = -44;
+                iconvod.positionY = 0;
+                break;
+                case 4:
+                imageRect.color = "transparent";
+                imageRect.border.color = "transparent";
+                iconvod.positionY = -44;
                 break;
             }
             if (currentIndex > 0) {

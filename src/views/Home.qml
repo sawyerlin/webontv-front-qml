@@ -2,7 +2,12 @@ import QtQuick 2.2
 
 import "components"
 
-Rectangle {
+View {
+    property string imageServerPath: undefined
+    property string imageBackground: "../images/homepage_bg.jpg"
+    property string imageLogo: "../images/homepage_logo.png"
+    property variant source: undefined
+
     property int borderWidth: 5
     property int gridViewLeftMargin: 88
     property int gridViewTopMargin: 85
@@ -13,15 +18,14 @@ Rectangle {
     property int gridViewItemInnerHeight: gridViewItemHeight - 2 * borderWidth
     property int headerViewLeft: gridViewLeftMargin + borderWidth
     property int headerViewTop: 40
-    property string imageServer: "http://fo-orange-preprod.hubee.tv/elts/"
-    property string imageBackground: "../images/homepage_bg.jpg"
-    property string imageLogo: "../images/homepage_logo.png"
-    property variant source: undefined
 
-    property int rowSize: Math.floor((parent.width - gridViewLeftMargin) / gridViewItemWidth);
+    property int rowSize: Math.floor((parent.width - gridViewLeftMargin) / gridViewItemWidth)
     property int rowIndex: Math.floor(focus.index / rowSize)
     property int columnIndex: focus.index - rowIndex * rowSize
-    property int marginTop: 0 
+    property int marginTop: 0
+
+    signal play(int chanelId)
+
     anchors.top: parent.top
     anchors.fill: parent
     Image {
@@ -62,7 +66,7 @@ Rectangle {
                                 name: channel.tvchannel + " - " + channel.name,
                                 type: channel.genre,
                                 tvchannel: channel.tvchannel,
-                                background: imageServer + channel.image
+                                background: imageServerPath + channel.image
                             });
                         }
                     }
@@ -131,7 +135,7 @@ Rectangle {
             }
             break
             case Qt.Key_Return: 
-            parent.play(homeModel.get(focus.index).id);
+            play(homeModel.get(focus.index).id);
             break;
             default:
             break;
