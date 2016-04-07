@@ -76,10 +76,10 @@ Item {
     }
     function init(data) {
         infoItem.logoSource = data.logo;
-        infoItem.chanelName = data.chanelName;
-        infoItem.programName = data.program.name;
-        videoNext.imageSource = data.nextProgram.imageSource;
-        videoNext.name = data.nextProgram.text;
+        infoItem.chanelName = data.channelName;
+        infoItem.programName = data.program.currentProgram.name;
+        videoNext.imageSource = data.program.nextProgram.imageSource;
+        videoNext.name = data.program.nextProgram.text;
     }
     function move(key) {
         switch (key) {
@@ -97,7 +97,6 @@ Item {
             break;
         }
     }
-
     function updateCurrentPosition(position) {
         timeline.positionTime = position;
         timeline.position = Math.floor(position / duration * timeline.width);

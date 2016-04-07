@@ -8,56 +8,27 @@ import "views"
 Rectangle {
     property int applicationWidth: 1280
     property int applicationHeight: 720
-    property variant lastView: undefined
-    property variant currentView: homeView
-    property variant views: [homeView, playerView]
+    property var lastView: undefined
+    property var currentView: homeView
+    property var views: [homeView, playerView]
     width: applicationWidth
     height: applicationHeight
     color: "white"
     Config {id: config}
-    Source {
-        id: source
-        config: config
-    }
     Home {
         id: homeView 
         imageServerPath: config.imageServerPath
-        onPlay:  {
-            source.getChannelById(chanelId, function(result) {
-                var chanel = result.Channel;
-                source.getProgramToPlay(chanelId, function(program) {
-                    // TODO: put this code into the source file
-                    var data = {
-                        chanelName: chanel.name,
-                        logo: config.imageServerPath + chanel.logoLiveFilepath,
-                        program: {
-                            name: program.ProgramToPlay.title,
-                            source: (function() { 
-                                // TODO: get the right source
-                                for (var videoId in program.ProgramToPlay.Videos) {
-                                    return program.ProgramToPlay.Videos[videoId].filepath;
-                                }
-                            })()
-                        },
-                        nextProgram: {
-                            imageSource: config.imageServerPath + program.NextProgram.imageFilepath,
-                            text: program.NextProgram.title
-                        }
-                    };
-                    playerView.play(data);
-                    showView(playerView);
-                });
-            });
+        source: HomeSource {config: config}
+        onPlay: {
+            playerView.play(channelId);
+            showView(playerView);
         }
-        source: source
     }
     Player {
         id: playerView
         imageServerPath: config.imageServerPath
-        onPlayerBack: {
-            showView(lastView);
-        }
-        source: source
+        source: LivePlayerSource {config: config}
+        onPlayerBack: showView(lastView)
     }
     Component.onCompleted: {
         showView(homeView);

@@ -6,7 +6,7 @@ View {
     property string imageServerPath: undefined
     property string imageBackground: "../images/homepage_bg.jpg"
     property string imageLogo: "../images/homepage_logo.png"
-    property variant source: undefined
+    property var source: undefined
 
     property int borderWidth: 5
     property int gridViewLeftMargin: 88
@@ -24,7 +24,7 @@ View {
     property int columnIndex: focus.index - rowIndex * rowSize
     property int marginTop: 0
 
-    signal play(int chanelId)
+    signal play(int channelId)
 
     anchors.top: parent.top
     anchors.fill: parent
@@ -56,21 +56,13 @@ View {
                 innerHeight: gridViewItemInnerHeight
             }
             Component.onCompleted: {
-                source.getChannels(function(result) {
-                    if (result) {
-                        var channels = result.Channels;
-                        for (var index in channels) {
-                            var channel = channels[index];
-                            homeModel.append({
-                                id: channel.id,
-                                name: channel.tvchannel + " - " + channel.name,
-                                type: channel.genre,
-                                tvchannel: channel.tvchannel,
-                                background: imageServerPath + channel.image
-                            });
+                if (source) {
+                    source.getResult(function(result) {
+                        for (var idx in result) {
+                            homeModel.append(result[idx]);
                         }
-                    }
-                })
+                    });
+                }
             }
             Border {
                 id: focus

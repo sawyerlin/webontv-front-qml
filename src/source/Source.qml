@@ -1,7 +1,7 @@
 import QtQuick 2.2
 
 Item {
-    property variant config: undefined 
+    property var config: undefined 
 
     function ajax(url, callback) {
         var xhr = new XMLHttpRequest;
@@ -28,9 +28,16 @@ Item {
         return ajax(url, callback);
     }
 
-    function getProgramToPlay(channelId, callback) {
+    function getProgramToPlay(channelId, playlistId, order, playlistOrder, finishedPlaylistId, callback) {
         var url = config.serviceServerPath + 
-        "/Programs/getProgramToPlay.json?channelId=" + channelId + "&stbDate=" + Math.round(Date.now() / 1000);
+        "/Programs/getProgramToPlay.json?" + 
+        "channelId=" + channelId + 
+        "&stbDate=" + Math.round(Date.now() / 1000) +
+        (!!playlistId ? "&playlistId=" + playlistId : "") + 
+        "&programOrder=" + order +
+        "&playlistOrder=" + playlistOrder + 
+        (!!finishedPlaylistId ? "&finishedPlaylist=" + finishedPlaylistId : "");
+        console.log(url);
         return ajax(url, callback);
     }
 }

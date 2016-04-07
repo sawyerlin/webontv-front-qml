@@ -4,11 +4,12 @@ import QtMultimedia 5.2
 import "components"
 
 View {
-    property variant source: undefined
+    property var source: undefined
     property string imageServerPath: undefined
+    property var dataSource: undefined
+    property bool isBacking: false
 
-    signal playerBack()
-
+    signal playerBack() 
     anchors.fill: parent
     color: "black"
     onHiden: {
@@ -22,10 +23,31 @@ View {
         autoPlay: true
         onDurationChanged: videoController.duration = video.duration
         onPositionChanged: videoController.updateCurrentPosition(video.position)
+        onStopped: {
+            if (!isBacking) {
+                var nextProgram = dataSource.program.nextProgram,
+                currentProgram = dataSource.program.currentProgram;
+                parent.source.getProgram(dataSource.channelId,
+                currentProgram.playlistId,
+                currentProgram.order,
+                currentProgram.playlistOrder,
+                currentProgram.playlistId == nextProgram.playlistId ?
+                nextProgram.playlistId : undefined,
+                function(program) {
+                    dataSource.program = program;
+                    video.source = dataSource.program.currentProgram.source;
+                    video.play();
+                    videoController.init(dataSource);
+                });
+            } else {
+                isBacking = false;
+            }
+        }
     }
     VideoController {
         id: videoController 
         onBack: {
+            isBacking = true;
             video.stop();
             playerBack();
         }
@@ -36,9 +58,12 @@ View {
             video.play();
         }
     }
-    function play(data) {
-        video.source = data.program.source;
-        video.play();
-        videoController.init(data);
+    function play(channelId) {
+        source.getResult(channelId, function(data) {
+            dataSource = data;
+            video.source = dataSource.program.currentProgram.source;
+            video.play();
+            videoController.init(dataSource);
+        });
     }
 }
