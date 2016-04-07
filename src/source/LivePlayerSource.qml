@@ -27,11 +27,13 @@ Source {
                     order: result.ProgramToPlay.int_order,
                     playlistOrder: result.ProgramToPlay.Playlist.int_order,
                     name: result.ProgramToPlay.title,
-                    // TODO: get the right source
                     source: (function() {
+                        var source = {};
                         for (var videoId in result.ProgramToPlay.Videos) {
-                            return result.ProgramToPlay.Videos[videoId].filepath;
+                            var video = result.ProgramToPlay.Videos[videoId];
+                            source[video.quality] = video.filepath;
                         }
+                        return source;
                     })()
                 },
                 nextProgram: {

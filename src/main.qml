@@ -29,6 +29,8 @@ Rectangle {
         imageServerPath: config.imageServerPath
         source: LivePlayerSource {config: config}
         onPlayerBack: showView(lastView)
+        onPlayPrevChannel: homeView.playPrevChannel()
+        onPlayNextChannel: homeView.playNextChannel()
     }
     Component.onCompleted: {
         showView(homeView);

@@ -4,7 +4,7 @@ import "mediaelements"
 
 Item {
     property alias logoSource: logo.source
-    property alias chanelName: chanelName.text
+    property alias channelName: channelName.text
     property alias programName: programName.text
 
     Image {
@@ -16,14 +16,14 @@ Item {
         anchors.left: logo.right
         anchors.leftMargin: 15
         Text {
-            id: chanelName
+            id: channelName
             font.pixelSize: 25
             font.bold: true
             color: "white"
         }
         Text {
             id: programName
-            anchors.top: chanelName.bottom
+            anchors.top: channelName.bottom
             anchors.topMargin: 5
             font.pixelSize: 25
             font.bold: true

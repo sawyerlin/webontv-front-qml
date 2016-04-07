@@ -136,6 +136,20 @@ View {
     onWidthChanged: {
         updateMarginTopScrollDown();
     }
+    function playNextChannel() {
+        focus.index ++;
+        if (focus.index >= homeModel.count) {
+            focus.index = 0
+        } 
+        play(homeModel.get(focus.index).id);
+    }
+    function playPrevChannel() {
+        focus.index --;
+        if (focus.index < 0) {
+            focus.index = homeModel.count - 1;
+        } 
+        play(homeModel.get(focus.index).id);
+    }
     function updateMarginTopScrollUp() {
         var top = rowIndex * gridViewItemHeight + marginTop;
         if (top < 0) {

@@ -10,6 +10,11 @@ Item {
     signal pause()
     signal play()
     signal back()
+    signal qualityChanged()
+    signal vod()
+    signal next()
+    signal prevChannel()
+    signal nextChannel()
     
     anchors.bottom: parent.bottom
     anchors.left: parent.left
@@ -63,12 +68,22 @@ Item {
                 infoItem.updatePlayback(isPaused);
                 break;
                 case 2:
-                // TODO: change quality
+                qualityChanged();
                 break;
                 case 3:
-                // TODO: show vod home
+                vod();
+                break;
+                case 4:
+                next();
                 break;
             }
+            break;
+            case Qt.Key_PageUp:
+            nextChannel();
+            break;
+            case Qt.Key_PageDown:
+            prevChannel();
+            break;
             default:
             move(event.key);
             break;
@@ -76,7 +91,7 @@ Item {
     }
     function init(data) {
         infoItem.logoSource = data.logo;
-        infoItem.chanelName = data.channelName;
+        infoItem.channelName = data.channelName;
         infoItem.programName = data.program.currentProgram.name;
         videoNext.imageSource = data.program.nextProgram.imageSource;
         videoNext.name = data.program.nextProgram.text;
