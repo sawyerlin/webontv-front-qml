@@ -21,10 +21,13 @@ View {
         videoController.focus = false;
     }
     onShown: videoController.focus = true
+    Image {
+        id: image
+        anchors.fill: parent
+    }
     Video {
         id: video
         anchors.fill: parent
-        autoPlay: true
         onDurationChanged: videoController.duration = video.duration
         onPositionChanged: videoController.updateCurrentPosition(video.position)
         onStopped: {
@@ -37,10 +40,9 @@ View {
                 currentProgram.playlistOrder,
                 currentProgram.playlistId == nextProgram.playlistId ?
                 nextProgram.playlistId : undefined,
-                function(program) {
+                function (program) {
                     dataSource.program = program;
-                    video.source = dataSource.program.currentProgram.source[currentQuality];
-                    video.play();
+                    loadVideo();
                     videoController.init(dataSource);
                 });
             } else {
@@ -86,9 +88,18 @@ View {
     function play(channelId) {
         source.getResult(channelId, function(data) {
             dataSource = data;
-            video.source = dataSource.program.currentProgram.source[currentQuality];
-            video.play();
+            loadVideo();
             videoController.init(dataSource);
         });
+    }
+    function loadVideo() {
+        if (dataSource.program.currentProgram.type == "1") { // Image
+            video.visible = false;
+            videoController.setDuration(dataSource.program.currentProgram.duration);
+            image.source = dataSource.program.currentProgram.imageSource;
+        } else {
+            video.source = dataSource.program.currentProgram.source[currentQuality];
+            video.play();
+        }
     }
 }

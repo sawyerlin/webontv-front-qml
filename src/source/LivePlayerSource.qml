@@ -26,6 +26,9 @@ Source {
                     playlistId: result.ProgramToPlay.Playlist.id,
                     order: result.ProgramToPlay.int_order,
                     playlistOrder: result.ProgramToPlay.Playlist.int_order,
+                    duration: result.ProgramToPlay.duration,
+                    imageSource: config.imageServerPath + result.ProgramToPlay.imageFilepath,
+                    type: result.ProgramToPlay.skin_type,
                     name: result.ProgramToPlay.title,
                     source: (function() {
                         var source = {};

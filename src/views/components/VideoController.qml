@@ -96,6 +96,9 @@ Item {
         videoNext.imageSource = data.program.nextProgram.imageSource;
         videoNext.name = data.program.nextProgram.text;
     }
+    function setDuration(duration) {
+        timeline.setDuration(duration);
+    }
     function move(key) {
         switch (key) {
             case Qt.Key_Right:

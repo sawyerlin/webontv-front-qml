@@ -37,6 +37,7 @@ Item {
         "&programOrder=" + order +
         "&playlistOrder=" + playlistOrder + 
         (!!finishedPlaylistId ? "&finishedPlaylist=" + finishedPlaylistId : "");
+        console.log(url);
         return ajax(url, callback);
     }
 }
