@@ -25,7 +25,6 @@ Rectangle {
         onPlay:  {
             source.getChannelById(chanelId, function(result) {
                 var chanel = result.Channel;
-                console.log(chanel.name);
                 source.getProgramToPlay(chanelId, function(program) {
                     // TODO: put this code into the source file
                     var data = {
@@ -55,7 +54,7 @@ Rectangle {
     Player {
         id: playerView
         imageServerPath: config.imageServerPath
-        onBack: {
+        onPlayerBack: {
             showView(lastView);
         }
         source: source

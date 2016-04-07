@@ -9,7 +9,7 @@ Item {
     height: 44
     Image {
         fillMode: Image.Tile
-        source: "../../../images/mediaItem/player_sprite.png"
+        source: "../../../../images/mediaItem/player_sprite.png"
         x: positionX
         y: positionY
     }

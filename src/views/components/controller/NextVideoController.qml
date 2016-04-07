@@ -3,6 +3,7 @@ import QtQuick 2.2
 Item {
     property alias imageSource: videoNextImage.source
     property alias name: videoNextName.text
+    property string borderColor: "transparent"
 
     Item {
         anchors.fill: parent
@@ -14,7 +15,7 @@ Item {
             id: imageRect
             anchors.fill: parent
             border.width: 5
-            border.color: "transparent"
+            border.color: borderColor
             color: "transparent"
             anchors.bottomMargin: 45
             Image {
