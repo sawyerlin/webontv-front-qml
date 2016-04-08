@@ -2,8 +2,11 @@ import QtQuick 2.2
 
 Item {
     property real duration: 0
-    property alias position: timeline.width
     property real positionTime: 0
+    property real position: Math.floor(positionTime / duration * width)
+
+    signal end()
+
     Item {
         id: timeItem
         anchors.top: parent.top
@@ -34,14 +37,14 @@ Item {
         property real startTime: 0
         id: imageTimer
         interval: 1000
-        running: false
-        repeat: false
+        repeat: true
         onTriggered: {
             startTime += 1000;
-            position = startTime;
+            positionTime = startTime;
             if (startTime > duration) {
                 startTime = 0;
                 imageTimer.stop();
+                end();
             }
         }
     }
@@ -53,10 +56,10 @@ Item {
         height: 10
         color: "gray"
         Rectangle {
-            id: timeline
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
+            width: position
             color: "white"
         }
     }

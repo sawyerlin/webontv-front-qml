@@ -32,19 +32,7 @@ View {
         onPositionChanged: videoController.updateCurrentPosition(video.position)
         onStopped: {
             if (isStoping) {
-                var nextProgram = dataSource.program.nextProgram,
-                currentProgram = dataSource.program.currentProgram;
-                parent.source.getProgram(dataSource.channelId,
-                currentProgram.playlistId,
-                currentProgram.order,
-                currentProgram.playlistOrder,
-                currentProgram.playlistId == nextProgram.playlistId ?
-                nextProgram.playlistId : undefined,
-                function (program) {
-                    dataSource.program = program;
-                    loadVideo();
-                    videoController.init(dataSource);
-                });
+                playNextVideo();
             } else {
                 isStoping = true;
             }
@@ -84,10 +72,27 @@ View {
             video.stop();
             playNextChannel();
         }
+        onImageEnd: playNextVideo();
     }
     function play(channelId) {
         source.getResult(channelId, function(data) {
             dataSource = data;
+            loadVideo();
+            videoController.init(dataSource);
+        });
+    }
+    function playNextVideo() {
+        video.visible = true;
+        var nextProgram = dataSource.program.nextProgram,
+        currentProgram = dataSource.program.currentProgram;
+        source.getProgram(dataSource.channelId,
+        currentProgram.playlistId,
+        currentProgram.order,
+        currentProgram.playlistOrder,
+        currentProgram.playlistId == nextProgram.playlistId ?
+        nextProgram.playlistId : undefined,
+        function (program) {
+            dataSource.program = program;
             loadVideo();
             videoController.init(dataSource);
         });

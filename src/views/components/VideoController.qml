@@ -15,6 +15,7 @@ Item {
     signal next()
     signal prevChannel()
     signal nextChannel()
+    signal imageEnd()
     
     anchors.bottom: parent.bottom
     anchors.left: parent.left
@@ -49,6 +50,7 @@ Item {
         anchors.topMargin: 40
         anchors.left: infoItem.left
         anchors.right: infoItem.right
+        onEnd: imageEnd()
     }
     Keys.onPressed: {
         switch (event.key) {
@@ -117,6 +119,5 @@ Item {
     }
     function updateCurrentPosition(position) {
         timeline.positionTime = position;
-        timeline.position = Math.floor(position / duration * timeline.width);
     }
 }
