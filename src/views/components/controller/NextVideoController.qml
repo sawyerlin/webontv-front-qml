@@ -5,6 +5,9 @@ Item {
     property alias name: videoNextName.text
     property string borderColor: "transparent"
 
+    signal moveLeft();
+    signal loadNext();
+
     Item {
         anchors.fill: parent
         anchors.leftMargin: 45
@@ -40,7 +43,25 @@ Item {
             font.pixelSize: 25
             font.bold: true
             color: "white"
+            elide: Text.ElideRight
             wrapMode: Text.WordWrap
         }
+    }
+    Keys.onPressed: {
+        if (event.key == Qt.Key_Left) {
+            unSetFocus();
+            moveLeft();
+        }
+        if (event.key == Qt.Key_Return) {
+            loadNext();
+        }
+    }
+    function setFocus() {
+        borderColor = "white";
+        focus = true;
+    }
+    function unSetFocus() {
+        borderColor = "transparent";
+        focus = false;
     }
 }

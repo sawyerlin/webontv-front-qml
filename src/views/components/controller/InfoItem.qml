@@ -6,6 +6,19 @@ Item {
     property alias logoSource: logo.source
     property alias channelName: channelName.text
     property alias programName: programName.text
+    property var currentItem: undefined
+
+    property var returnItem: undefined 
+    property var playbackItem: undefined
+    property var qualityItem: undefined 
+    property var vodItem: undefined
+    property var outBoundItem: undefined
+
+    signal backClicked();
+    signal playBackClicked(bool paused);
+    signal qualityClicked();
+    signal vodClicked();
+    signal moveOutBound();
 
     Image {
         id: logo
@@ -33,75 +46,82 @@ Item {
     Item {
         anchors.right: parent.right
         width: 50
-        Icon {
+        VodIcon {
             id: iconvod
-            positionX: -430
+            onPressed: vodClicked();
         }
-        Icon {
+        QualityIcon {
             id: iconquality
             anchors.right: iconvod.left
-            anchors.rightMargin: 8
-            positionX: -323
+            onPressed: qualityClicked()
         }
-        Icon {
+        PlaybackIcon {
             id: iconplayback
             anchors.right: iconquality.left
-            anchors.rightMargin: 8
-            positionX: -107
+            onPressed: playBackClicked(iconplayback.paused)
         }
-        Icon {
+        BackIcon {
             id: iconreturn
             anchors.right: iconplayback.left
-            anchors.rightMargin: 8
-            positionX: -377
-            positionY: -44
+            onPressed: {
+                currentItem = undefined;
+                iconplayback.reset();
+                backClicked();
+            }
+        }
+        Component.onCompleted: {
+            returnItem = {
+                item: iconreturn,
+                previous: undefined
+            };
+            playbackItem = {
+                item: iconplayback, 
+                previous: returnItem
+            };
+            returnItem.next = playbackItem;
+            qualityItem = {
+                item: iconquality, 
+                previous: playbackItem 
+            }
+            playbackItem.next = qualityItem;
+            vodItem = {
+                item: iconvod,
+                previous: qualityItem
+            };
+            qualityItem.next = vodItem;
+            outBoundItem = {
+                item: {
+                    show: function() { 
+                        unSetFocus();
+                        moveOutBound(); 
+                    },
+                    hide: function() {}
+                },
+                previous: vodItem
+            };
+            vodItem.next = outBoundItem;
         }
     }
-    function updatePlayback(pause) {
-        if (pause) {
-            iconplayback.positionX = -161;
-        } else {
-            iconplayback.positionX = -107;
+    Keys.onPressed: {
+        if (event.key == Qt.Key_Right) {
+            move(currentItem.next);
+        } else if (event.key == Qt.Key_Left) {
+            move(currentItem.previous);
         }
     }
-    function moveRight(index) {
-        switch(index) {
-            case 0:
-            iconreturn.positionY = 0;
-            iconplayback.positionY = -44;
-            break;
-            case 1:
-            iconplayback.positionY = 0;
-            iconquality.positionY= -44;
-            break;
-            case 2:
-            iconquality.positionY= 0;
-            iconvod.positionY= -44;
-            break;
-            case 3:
-            videoNext.borderColor = "white";
-            iconvod.positionY = 0;
-            break;
+    function setFocus(item) {
+        currentItem = item || (currentItem != undefined ? currentItem.previous : returnItem);
+        currentItem.item.show();
+    }
+    function unSetFocus() {
+        if (currentItem && currentItem.item != undefined) {
+            currentItem.item.hide();
         }
     }
-    function moveLeft(index) {
-        switch(index) {
-            case 1:
-            iconreturn.positionY = -44;
-            iconplayback.positionY = 0;
-            break;
-            case 2:
-            iconplayback.positionY = -44;
-            iconquality.positionY = 0;
-            break;
-            case 3:
-            iconquality.positionY = -44;
-            iconvod.positionY = 0;
-            break;
-            case 4:
-            videoNext.borderColor = "transparent";
-            iconvod.positionY = -44;
-            break;
+    function move(item) {
+        if (item) {
+            unSetFocus();
+            setFocus(item);
         }
     }
 }

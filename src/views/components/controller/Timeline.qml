@@ -18,9 +18,7 @@ Item {
             font.pixelSize: 25
             font.bold: true
             color: "white"
-            text: {
-                return timeFromMS(positionTime);
-            }
+            text: timeFromMS(positionTime)
         }
         Text {
             anchors.right: parent.right
@@ -28,9 +26,7 @@ Item {
             font.pixelSize: 25
             font.bold: true
             color: "white"
-            text: {
-                return timeFromMS(duration);
-            }
+            text: timeFromMS(duration)
         }
     }
     Timer {
@@ -54,6 +50,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 10
+        clip: true
         color: "gray"
         Rectangle {
             anchors.left: parent.left

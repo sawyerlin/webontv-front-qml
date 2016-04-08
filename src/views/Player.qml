@@ -16,11 +16,8 @@ View {
 
     anchors.fill: parent
     color: "black"
-    onHiden: {
-        videoController.updateCurrentPosition(0);
-        videoController.focus = false;
-    }
-    onShown: videoController.focus = true
+    onHiden: videoController.unSetFocus()
+    onShown: videoController.setFocus()
     Image {
         id: image
         anchors.fill: parent
@@ -60,8 +57,8 @@ View {
                 video.play();
             }
         }
-        onVod: console.log("show vod home")
-        onNext: video.stop()
+        onVod: console.log("show vod home") // TODO: show vod home page
+        onNext: video.visible ? video.stop() : playNextVideo() 
         onPrevChannel: {
             isStoping = false;
             video.stop();

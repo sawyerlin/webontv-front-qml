@@ -5,7 +5,6 @@ import "controller"
 Item {
     property int currentIndex: 0
     property alias duration: timeline.duration
-    property bool isPaused: false
 
     signal pause()
     signal play()
@@ -35,14 +34,21 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: 300
         height: 63
+        onBackClicked: back()
+        onPlayBackClicked: paused ? pause() : play()
+        onQualityClicked: qualityChanged()
+        onVodClicked: vod()
+        onMoveOutBound: videoNext.setFocus()
     }
     NextVideoController {
         id: videoNext
         anchors.left: infoItem.right
         anchors.top: parent.top
-        anchors.topMargin: 100
+        anchors.topMargin: 60
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        onMoveLeft: infoItem.setFocus()
+        onLoadNext: next()
     }
     Timeline {
         id: timeline
@@ -54,32 +60,6 @@ Item {
     }
     Keys.onPressed: {
         switch (event.key) {
-            case Qt.Key_Return:
-            switch (videoController.currentIndex) {
-                case 0:
-                infoItem.updatePlayback(false);
-                back();
-                break;
-                case 1:
-                if (isPaused) {
-                    play();
-                } else {
-                    pause();
-                }
-                isPaused = !isPaused;
-                infoItem.updatePlayback(isPaused);
-                break;
-                case 2:
-                qualityChanged();
-                break;
-                case 3:
-                vod();
-                break;
-                case 4:
-                next();
-                break;
-            }
-            break;
             case Qt.Key_PageUp:
             nextChannel();
             break;
@@ -104,13 +84,11 @@ Item {
     function move(key) {
         switch (key) {
             case Qt.Key_Right:
-            infoItem.moveRight(currentIndex);
             if (currentIndex < 4) {
                 currentIndex ++;
             }
             break;
             case Qt.Key_Left:
-            infoItem.moveLeft(currentIndex);
             if (currentIndex > 0) {
                 currentIndex --;
             }
@@ -119,5 +97,11 @@ Item {
     }
     function updateCurrentPosition(position) {
         timeline.positionTime = position;
+    }
+    function setFocus() {
+        infoItem.setFocus();
+    }
+    function unSetFocus() {
+        infoItem.unSetFocus();
     }
 }
