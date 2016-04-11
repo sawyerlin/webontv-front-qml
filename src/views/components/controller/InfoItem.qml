@@ -20,6 +20,9 @@ Item {
     signal vodClicked();
     signal moveOutBound();
 
+    onActiveFocusChanged: {
+        console.log(focus);
+    }
     Image {
         id: logo
         width: 85

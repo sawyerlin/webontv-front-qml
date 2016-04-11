@@ -5,6 +5,8 @@ import "controller"
 Item {
     property int currentIndex: 0
     property alias duration: timeline.duration
+    property int timerTime: 0
+    property bool isShown: false
 
     signal pause()
     signal play()
@@ -20,6 +22,19 @@ Item {
     anchors.left: parent.left
     anchors.right: parent.right
     height: 255
+    Timer {
+        id: timer
+        interval: 1000
+        repeat: true
+        onTriggered: {
+            timerTime += 1000;
+            if (timerTime === 5000) {
+                timerTime = 0;
+                visible = false;
+                timer.stop();
+            }
+        }
+    }
     Rectangle {
         anchors.fill: parent;
         color: "black"
@@ -34,10 +49,10 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: 300
         height: 63
-        onBackClicked: back()
+        onBackClicked: onBack()
         onPlayBackClicked: paused ? pause() : play()
         onQualityClicked: qualityChanged()
-        onVodClicked: vod()
+        onVodClicked: onVod()
         onMoveOutBound: videoNext.setFocus()
     }
     NextVideoController {
@@ -59,16 +74,21 @@ Item {
         onEnd: imageEnd()
     }
     Keys.onPressed: {
-        switch (event.key) {
-            case Qt.Key_PageUp:
-            nextChannel();
-            break;
-            case Qt.Key_PageDown:
-            prevChannel();
-            break;
-            default:
-            move(event.key);
-            break;
+        if (isShown) {
+            timer.start();
+            timerTime = 0;
+            visible = true;
+            switch (event.key) {
+                case Qt.Key_PageUp:
+                nextChannel();
+                break;
+                case Qt.Key_PageDown:
+                prevChannel();
+                break;
+                default:
+                move(event.key);
+                break;
+            }
         }
     }
     function init(data) {
@@ -99,9 +119,25 @@ Item {
         timeline.positionTime = position;
     }
     function setFocus() {
+        timer.start();
+        isShown = true;
         infoItem.setFocus();
     }
     function unSetFocus() {
         infoItem.unSetFocus();
+    }
+    function reset() {
+        isShown = false;
+        timer.stop();
+        visible = true;
+        timerTime = 0;
+    }
+    function onBack() {
+        reset();
+        back();
+    }
+    function onVod() {
+        reset();
+        vod();
     }
 }
