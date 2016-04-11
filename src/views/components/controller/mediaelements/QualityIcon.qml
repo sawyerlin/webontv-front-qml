@@ -1,6 +1,9 @@
 import QtQuick 2.2
 
 Icon {
+    property bool isSD: true
+    property int hdTypeCount: 5
+    property int sdTypeCount: 3
     anchors.rightMargin: 8
     positionX: -323
     Column {
@@ -10,8 +13,10 @@ Icon {
         anchors.topMargin: -70
         anchors.left: parent.left
         Row {
-            QualityType {
-                model: 5
+            Repeater {
+                id: hdType
+                model: hdTypeCount
+                QualityType {color: "gray"}
             }
             Rectangle {
                 width: 10
@@ -19,16 +24,19 @@ Icon {
                 color: "transparent"
             }
             Text {
+                id: hdText
                 text: "HD"
-                color: "white"
+                color: "gray"
                 font.pixelSize: 15
                 font.bold: true
                 anchors.leftMargin: 20
             }
         }
         Row {
-            QualityType {
-                model: 3
+            Repeater {
+                id: sdType
+                model: sdTypeCount
+                QualityType {color: "white"}
             }
             Rectangle {
                 width: 20
@@ -36,12 +44,39 @@ Icon {
                 color: "transparent"
             }
             Text {
-                text: "SD"
+                id: sdText
+                text: "voir en SD"
                 color: "white"
                 font.pixelSize: 15
                 font.bold: true
                 anchors.leftMargin: 20
             }
+        }
+    }
+    onPressed: {
+        isSD = !isSD;
+        if (isSD) {
+            for (var i = 0; i < hdTypeCount; i ++) {
+                hdType.itemAt(i).color = "gray";
+            }
+            for (i = 0; i < sdTypeCount; i++) {
+                sdType.itemAt(i).color = "white";
+            }
+            sdText.text = "voir en SD";
+            sdText.color = "white";
+            hdText.text = "HD";
+            hdText.color = "gray";
+        } else {
+            for (var i = 0; i < hdTypeCount; i++) {
+                hdType.itemAt(i).color = "white";
+            }
+            for (i = 0; i < sdTypeCount; i++) {
+                sdType.itemAt(i).color = "gray";
+            }
+            sdText.text = "SD";
+            sdText.color = "gray";
+            hdText.text = "voir en HD";
+            hdText.color = "white";
         }
     }
     onShown: textItem.visible = true
