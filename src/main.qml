@@ -29,6 +29,7 @@ Rectangle {
         imageServerPath: config.imageServerPath
         source: LivePlayerSource {config: config}
         onPlayerBack: showView(lastView)
+        onPlayerVod: console.log("vod")
         onPlayPrevChannel: homeView.playPrevChannel()
         onPlayNextChannel: homeView.playNextChannel()
     }

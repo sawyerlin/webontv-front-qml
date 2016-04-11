@@ -23,6 +23,7 @@ Source {
         getProgramToPlay(channelId, playlistId, order, playlistOrder, finishedPlaylistId, function(result) {
             var program = {
                 currentProgram: {
+                    id: result.ProgramToPlay.id,
                     playlistId: result.ProgramToPlay.Playlist.id,
                     order: result.ProgramToPlay.int_order,
                     playlistOrder: result.ProgramToPlay.Playlist.int_order,

@@ -49,11 +49,11 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: 300
         height: 63
-        onBackClicked: onBack()
-        onPlayBackClicked: paused ? pause() : play()
-        onQualityClicked: qualityChanged()
-        onVodClicked: onVod()
-        onMoveOutBound: videoNext.setFocus()
+        onBackClicked: parent.visible ? onBack() : show() 
+        onPlayBackClicked: parent.visible ? (paused ? pause() : play()) : show()
+        onQualityClicked: parent.visible ? qualityChanged() : show();
+        onVodClicked: parent.visible ? onVod() : show()
+        onMoveOutBound: parent.visible ? videoNext.setFocus() : show()
     }
     NextVideoController {
         id: videoNext
@@ -125,6 +125,9 @@ Item {
     }
     function unSetFocus() {
         infoItem.unSetFocus();
+    }
+    function show() {
+        visible = true;
     }
     function reset() {
         isShown = false;

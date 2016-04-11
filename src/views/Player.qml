@@ -6,13 +6,16 @@ import "components"
 View {
     property var source: undefined
     property string imageServerPath: undefined
-    property string currentQuality: "SD"
+    property string sdType: "SD"
+    property string hdType: "HD"
+    property string currentQuality: sdType
     property var dataSource: undefined
     property bool isStoping: true
 
-    signal playerBack() 
-    signal playPrevChannel();
-    signal playNextChannel();
+    signal playerBack(int position) 
+    signal playerVod(int position);
+    signal playPrevChannel(int position);
+    signal playNextChannel(int position);
 
     anchors.fill: parent
     color: "black"
@@ -27,49 +30,29 @@ View {
         anchors.fill: parent
         onDurationChanged: videoController.duration = video.duration
         onPositionChanged: videoController.updateCurrentPosition(video.position)
-        onStopped: {
-            if (isStoping) {
-                playNextVideo();
-            } else {
-                isStoping = true;
-            }
-        }
+        onStopped: isStoping ? playNextVideo() : isStoping = true
     }
     VideoController {
         id: videoController 
-        onBack: {
-            isStoping = false;
-            video.stop();
-            playerBack();
-        }
+        onBack: playerBack(stop());
         onPause: video.pause()
         onPlay: video.play()
         onQualityChanged: {
-            if (currentQuality == "SD") {
-                currentQuality = "HD";
-            } else {
-                currentQuality = "SD";
-            }
+            var lastPosition = video.position;
+            currentQuality = currentQuality == sdType ? hdType : sdType;
             if (dataSource.program.currentProgram.source[currentQuality]) {
                 isStoping = false;
                 video.stop();
                 video.source = dataSource.program.currentProgram.source[currentQuality];
                 video.play();
+                video.seek(lastPosition);
             }
         }
-        onVod: console.log("show vod home") // TODO: show vod home page
+        onVod: playerVod(stop())
         onNext: video.visible ? video.stop() : playNextVideo() 
-        onPrevChannel: {
-            isStoping = false;
-            video.stop();
-            playPrevChannel();
-        }
-        onNextChannel: {
-            isStoping = false;
-            video.stop();
-            playNextChannel();
-        }
-        onImageEnd: playNextVideo();
+        onPrevChannel: playPrevChannel(stop())
+        onNextChannel: playNextChannel(stop())
+        onImageEnd: playNextVideo()
     }
     function play(channelId) {
         source.getResult(channelId, function(data) {
@@ -77,6 +60,15 @@ View {
             loadVideo();
             videoController.init(dataSource);
         });
+    }
+    function stop() {
+        source.storage.saveState({
+            channelId: dataSource.channelId,
+            programId: dataSource.program.currentProgram.id,
+            position: video.position
+        });
+        isStoping = false;
+        video.stop();
     }
     function playNextVideo() {
         video.visible = true;

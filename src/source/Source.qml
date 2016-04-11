@@ -2,6 +2,7 @@ import QtQuick 2.2
 
 Item {
     property var config: undefined 
+    property var storage: Storage {}
 
     function ajax(url, callback) {
         var xhr = new XMLHttpRequest;
