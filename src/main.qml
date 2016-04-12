@@ -8,9 +8,8 @@ import "views"
 Rectangle {
     property int applicationWidth: 1280
     property int applicationHeight: 720
-    property var lastView: undefined
     property var currentView: homeView
-    property var views: [homeView, playerView]
+    property var views: [homeView, playerView, vodView]
     width: applicationWidth
     height: applicationHeight
     color: "white"
@@ -28,17 +27,23 @@ Rectangle {
         id: playerView
         imageServerPath: config.imageServerPath
         source: LivePlayerSource {config: config}
-        onPlayerBack: showView(lastView)
-        onPlayerVod: console.log("vod")
+        onPlayerBack: showView(homeView)
+        onPlayerVod: showView(vodView)
         onPlayPrevChannel: homeView.playPrevChannel()
         onPlayNextChannel: homeView.playNextChannel()
+    }
+    Vod {
+        id: vodView
+        onBack: {
+            playerView.start(2);
+            showView(playerView)
+        }
     }
     Component.onCompleted: {
         showView(homeView);
     }
     function showView(view) {
         if (view) {
-            lastView = currentView;
             for (var index in views) {
                 if (views[index] == view) {
                     continue;

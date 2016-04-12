@@ -26,7 +26,6 @@ View {
 
     signal play(int channelId)
 
-    anchors.top: parent.top
     anchors.fill: parent
     Image {
         source: imageBackground 
