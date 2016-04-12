@@ -6,14 +6,9 @@ Item {
         var db = LocalStorage.openDatabaseSync("database", "1.0", "WTV", 1000000);
         db.transaction(
             function(tx) {
-                tx.executeSql("CREATE TABLE IF NOT EXISTS State(channelId INT, programId INT, position INT, PRIMARY KEY (channelId))");
-                tx.executeSql("INSERT OR IGNORE INTO State VALUES(?, ?, ?)", [data.channelId, data.programId, data.position]);
-                tx.executeSql("UPDATE State SET programId = ?, position = ? WHERE channelId = ?", [data.programId, data.position, data.channelId]);
-                var rs = tx.executeSql("SELECT * FROM State");
-                for (var i = 0; i < rs.rows.length; i++) {
-                    var item = rs.rows.item(i);
-                    console.log(item.channelId + " " + item.programId + " " + item.position);
-                }
+                tx.executeSql("CREATE TABLE IF NOT EXISTS State(channelId INT, playlistId INT, programOrder INT, playlistOrder INT, finishedPlaylistId INT, position INT, PRIMARY KEY (channelId))");
+                tx.executeSql("INSERT OR IGNORE INTO State VALUES(?, ?, ?, ?, ?, ?)", [data.channelId, data.playlistId, data.order, data.playlistOrder, data.finishedPlaylistId, data.position]);
+                tx.executeSql("UPDATE State SET playlistId = ?, programOrder = ?, playlistOrder = ?, finishedPlaylistId = ?, position = ? WHERE channelId = ?", [data.playlistId, data.order, data.playlistOrder, data.finishedPlaylistId, data.position, data.channelId]);
             }
         );
     }
@@ -22,14 +17,23 @@ Item {
         var db = LocalStorage.openDatabaseSync("database", "1.0", "WTV", 1000000);
         db.transaction(
             function(tx) {
-                var rs = tx.executeSql("SELECT * FROM State WHERE channelId=?", [channelId]);
-                var item = rs.rows.item[0];
-                callback(item ? {
-                    channelId: channelId,
-                    programId: programId,
-                    position: item.position
-                } : undefined);
+                try {
+                    var rs = tx.executeSql("SELECT * FROM State WHERE channelId = ?", [channelId]);
+                    var item = rs.rows.item(rs.rows.length - 1);
+                    callback(item ? {
+                        channelId: channelId,
+                        playlistId: item.playlistId,
+                        order: item.programOrder,
+                        playlistOrder: item.playlistOrder,
+                        finishedPlayerlistId: item.finishedPlaylistId,
+                        position: item.position
+                    } : undefined);
+                } catch (e) {
+                    // TODO: show error message here
+                    callback(undefined);
+                }
             }
+
         );
     }
 }

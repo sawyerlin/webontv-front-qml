@@ -3,8 +3,8 @@ import QtQuick 2.2
 Source {
     function getResult(channelId, callback) {
         getChannelById(channelId, function(result) {
-            var channel = result.Channel;
-            var data = {
+            var channel = result.Channel,
+            data = {
                 channelId: channelId,
                 channelName: channel.name,
                 logo: config.imageServerPath + channel.logoLiveFilepath,
@@ -13,10 +13,7 @@ Source {
                     nextProgram: {}
                 }
             };
-            getProgram(channelId, undefined, undefined, undefined, undefined, function(program) {
-                data.program = program;
-                callback(data);
-            });
+            callback(data);
         });
     }
     function getProgram(channelId, playlistId, order, playlistOrder, finishedPlaylistId, callback) {

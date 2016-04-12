@@ -54,36 +54,61 @@ View {
         onNextChannel: playNextChannel(stop())
         onImageEnd: playNextVideo()
     }
-    function play(channelId) {
+    function start(channelId) {
         source.getResult(channelId, function(data) {
             dataSource = data;
-            loadVideo();
-            videoController.init(dataSource);
+            source.storage.getState(channelId, function(result) {
+                if (result) {
+                    play(result, function() {video.seek(result.position);});
+                } else {
+                    source.getProgram(channelId, undefined, undefined, undefined, undefined, function(program) {
+                        dataSource.program = program;
+                        loadVideo();
+                        videoController.init(dataSource);
+                    });
+                }
+            });
         });
     }
     function stop() {
+        var program = dataSource.program.currentProgram;
         source.storage.saveState({
             channelId: dataSource.channelId,
-            programId: dataSource.program.currentProgram.id,
+            playlistId: program.playlistId,
+            order: program.order == 0 ? 0 : program.order - 1,
+            playlistOrder: program.playlistOrder,
+            finishedPlaylistId: program.finishedPlaylistId,
             position: video.position
         });
         isStoping = false;
         video.stop();
     }
+    function play(program, callback) {
+        source.getProgram(program.channelId, 
+        program.playlistId, 
+        program.order, 
+        program.playlistOrder, 
+        program.finishedPlaylistId, 
+        function (result) {
+            dataSource.program = result;
+            loadVideo();
+            videoController.init(dataSource);
+            if (callback) {
+                callback();
+            }
+        });
+    }
     function playNextVideo() {
         video.visible = true;
         var nextProgram = dataSource.program.nextProgram,
         currentProgram = dataSource.program.currentProgram;
-        source.getProgram(dataSource.channelId,
-        currentProgram.playlistId,
-        currentProgram.order,
-        currentProgram.playlistOrder,
-        currentProgram.playlistId == nextProgram.playlistId ?
-        nextProgram.playlistId : undefined,
-        function (program) {
-            dataSource.program = program;
-            loadVideo();
-            videoController.init(dataSource);
+        play({
+            channelId: dataSource.channelId,
+            playlistId: currentProgram.playlistId,
+            order: currentProgram.order,
+            playlistOrder: currentProgram.playlistOrder,
+            playlistId: currentProgram.playlistId == nextProgram.playlistId ?
+            nextProgram.playlistId : undefined
         });
     }
     function loadVideo() {

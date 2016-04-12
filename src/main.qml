@@ -20,7 +20,7 @@ Rectangle {
         imageServerPath: config.imageServerPath
         source: HomeSource {config: config}
         onPlay: {
-            playerView.play(channelId);
+            playerView.start(channelId);
             showView(playerView);
         }
     }
