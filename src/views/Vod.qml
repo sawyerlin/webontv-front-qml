@@ -17,11 +17,18 @@ View {
         anchors.right: parent.right
         height: 200
     }
-    Text {
-        text: "VodHome"
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
-        font.pixelSize: 50
+    ListModel {id: vodModel}
+    Column {
+        anchors.fill: parent
+        anchors.topMargin: 220
+        anchors.leftMargin: 110
+        Repeater {
+            model: vodModel 
+            VodLine {
+                headerName: model.name + " (" + model.size + ")"
+                lineSource: model.programs
+            }
+        }
     }
     Keys.onPressed: back()
     function init(channel) {
@@ -32,7 +39,9 @@ View {
         vodHeader.desc = channel.channelDesc;
         source.getResult(channel.channelId, function(result) {
             dataSource.categories = result;
-            // TODO: update view
+            for (var index in dataSource.categories) {
+                vodModel.append(dataSource.categories[index]);
+            }
         });
     }
 }

@@ -40,9 +40,7 @@ View {
         GridView {
             anchors.fill: parent
             anchors.topMargin: marginTop 
-            ListModel {
-                id: homeModel
-            } 
+            ListModel {id: homeModel} 
             cellWidth: gridViewItemWidth
             cellHeight: gridViewItemHeight
             model: homeModel
