@@ -28,14 +28,20 @@ Rectangle {
         imageServerPath: config.imageServerPath
         source: LivePlayerSource {config: config}
         onPlayerBack: showView(homeView)
-        onPlayerVod: showView(vodView)
+        onPlayerVod: {
+            vodView.init(channel);
+            showView(vodView);
+        }
         onPlayPrevChannel: homeView.playPrevChannel()
         onPlayNextChannel: homeView.playNextChannel()
     }
     Vod {
         id: vodView
+        imageServerPath: config.imageServerPath
+        source: VodSource {config: config}
         onBack: {
-            playerView.start(2);
+            var channelId = 3;
+            playerView.start(channelId);
             showView(playerView)
         }
     }

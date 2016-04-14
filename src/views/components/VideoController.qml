@@ -92,7 +92,7 @@ Item {
         }
     }
     function init(data) {
-        infoItem.logoSource = data.logo;
+        infoItem.logoSource = data.liveLogo;
         infoItem.channelName = data.channelName;
         infoItem.programName = data.program.currentProgram.name;
         videoNext.imageSource = data.program.nextProgram.imageSource;

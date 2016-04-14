@@ -7,7 +7,10 @@ Source {
             data = {
                 channelId: channelId,
                 channelName: channel.name,
-                logo: config.imageServerPath + channel.logoLiveFilepath,
+                channelDesc: channel.genre,
+                liveLogo: config.imageServerPath + channel.logoLiveFilepath,
+                vodLogo: config.imageServerPath + channel.logoFilepath,
+                banner: config.imageServerPath + channel.bannerFilepath,
                 program: {
                     currentProgram: {},
                     nextProgram: {}

@@ -40,4 +40,13 @@ Item {
         (!!finishedPlaylistId ? "&finishedPlaylist=" + finishedPlaylistId : "");
         return ajax(url, callback);
     }
+
+    function getVodPrograms(channelId, nbProgramByCategory, callback) {
+        nbProgramByCategory = nbProgramByCategory || 10;
+        var url = config.serviceServerPath +
+        "/Programs/getProgramsGroupedByCategory.json?channelId=" + channelId +
+        "&nbProgramByCategory=" + nbProgramByCategory;
+        console.log(url);
+        return ajax(url, callback);
+    }
 }

@@ -35,7 +35,7 @@ View {
         anchors.fill: parent
         color: "transparent"
         anchors.leftMargin: gridViewLeftMargin
-        anchors.top: logo.bottom
+        anchors.top: liveLogo.bottom
         anchors.topMargin: gridViewTopMargin
         GridView {
             anchors.fill: parent
@@ -80,7 +80,7 @@ View {
         }
     }
     Image {
-        id: logo
+        id: liveLogo
         source: imageLogo
         anchors.left: parent.left
         anchors.leftMargin: headerViewLeft

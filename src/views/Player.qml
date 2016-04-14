@@ -13,7 +13,7 @@ View {
     property bool isStoping: true
 
     signal playerBack(int position) 
-    signal playerVod(int position);
+    signal playerVod(var channel);
     signal playPrevChannel(int position);
     signal playNextChannel(int position);
 
@@ -34,7 +34,7 @@ View {
     }
     VideoController {
         id: videoController 
-        onBack: playerBack(stop());
+        onBack: playerBack(stop())
         onPause: video.pause()
         onPlay: video.play()
         onQualityChanged: {
@@ -48,7 +48,10 @@ View {
                 video.seek(lastPosition);
             }
         }
-        onVod: playerVod(stop())
+        onVod: {
+            stop();
+            playerVod(dataSource);
+        }
         onNext: video.visible ? video.stop() : playNextVideo() 
         onPrevChannel: playPrevChannel(stop())
         onNextChannel: playNextChannel(stop())

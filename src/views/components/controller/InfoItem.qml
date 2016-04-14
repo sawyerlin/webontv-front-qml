@@ -3,7 +3,7 @@ import QtQuick 2.2
 import "mediaelements"
 
 Item {
-    property alias logoSource: logo.source
+    property alias logoSource: liveLogo.source
     property alias channelName: channelName.text
     property alias programName: programName.text
     property var currentItem: undefined
@@ -24,12 +24,12 @@ Item {
         console.log(focus);
     }
     Image {
-        id: logo
+        id: liveLogo
         width: 85
         height: 63
     }
     Item {
-        anchors.left: logo.right
+        anchors.left: liveLogo.right
         anchors.leftMargin: 15
         Text {
             id: channelName
