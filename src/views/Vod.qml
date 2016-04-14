@@ -18,19 +18,26 @@ View {
         height: 200
     }
     ListModel {id: vodModel}
-    Column {
+    Item {
         anchors.fill: parent
         anchors.topMargin: 220
         anchors.leftMargin: 110
-        Repeater {
-            model: vodModel 
-            VodLine {
-                headerName: model.name + " (" + model.size + ")"
-                lineSource: model.programs
+        Column {
+            anchors.fill: parent
+            Repeater {
+                model: vodModel 
+                VodLine {lineSource: model}
             }
         }
+        Border {
+            id: focus
+            width: 100
+            height: 100
+            border.width: 5
+            anchors.left: parent.left
+            anchors.top: parent.top
+        }
     }
-    Keys.onPressed: back()
     function init(channel) {
         dataSource = channel;
         vodHeader.background = channel.banner;

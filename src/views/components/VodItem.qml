@@ -1,13 +1,19 @@
 import QtQuick 2.2
 
 Item {
-    property int itemWidth: 257
-    property int itemMargin: 10
     property var itemSource: undefined
-    property string backgroundColor: "transparent"
-    property alias backgroundFillMode: image.fillMode
-    property int backgroundPositionX: 0
-    property int backgroundPositionY: 0
+    property bool isTrueItem: itemSource.index != "-1"
+    property int itemWidth: isTrueItem ? 257 : 143
+    property int itemMargin: 10
+    property string backgroundColor: isTrueItem ? "transparent" : "#cccccc"
+    property string backgroundImage: isTrueItem ? itemSource.background : "../../images/underline_grey.png"
+    property int backgroundPositionX: isTrueItem ? 0 : 34
+    property int backgroundPositionY: isTrueItem ? 0 : 130
+
+    signal moveLeft(int index);
+    signal moveRight(int index);
+    signal moveUp(int index);
+    signal moveDown(int index);
 
     anchors.top: parent.top
     anchors.bottom: parent.bottom
@@ -26,15 +32,15 @@ Item {
         Image {
             id: image
             anchors.top: parent.top 
-            anchors.bottom: itemSource ? parent.bottom: undefined
+            anchors.bottom: isTrueItem ? parent.bottom : undefined
             anchors.left: parent.left
-            anchors.right: itemSource ? parent.right: undefined
+            anchors.right: isTrueItem ? parent.right : undefined
             anchors.leftMargin: backgroundPositionX
             anchors.topMargin: backgroundPositionY
-            source: itemSource ? itemSource.background : "../../images/underline_grey.png"
+            source: backgroundImage
         }
         Text {
-            visible: !itemSource 
+            visible: !isTrueItem
             text: "tout afficher"
             font.pixelSize: 18
             color: "#3c3c3c"
@@ -42,6 +48,22 @@ Item {
             anchors.top: parent.top
             anchors.leftMargin: backgroundPositionX - 15
             anchors.topMargin: backgroundPositionY - 25
+        }
+    }
+    Keys.onPressed: {
+        switch (event.key) {
+            case Qt.Key_Left:
+            moveLeft(itemSource.index);
+            break;
+            case Qt.Key_Right:
+            moveRight(itemSource.index);
+            break;
+            case Qt.Key_Up:
+            moveUp(itemSource.index);
+            break;
+            case Qt.Key_Down:
+            moveDown(itemSource.index);
+            break;
         }
     }
 }

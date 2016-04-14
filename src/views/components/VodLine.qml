@@ -10,6 +10,7 @@ Item {
     height: wrapperHeight + headerHeight
     anchors.left: parent.left
     anchors.right: parent.right
+    clip: true
     Text {
         id: header
         font.pixelSize: headerFontSize
@@ -17,24 +18,37 @@ Item {
         anchors.topMargin: headerMargin
         anchors.bottomMargin: headerMargin
         color: "#3c3c3c"
+        text: lineSource.name + " (" + lineSource.size + ")"
     }
-    
     Item {
         id: wrapper
         anchors.fill: parent
         anchors.topMargin: headerHeight
         Row {
             anchors.fill: parent
-            VodItem {
-                itemWidth: 143
-                backgroundColor: "#ff6600"//"#cccccc"
-                backgroundFillMode: Image.PreserveAspectFit
-                backgroundPositionX: 34
-                backgroundPositionY: 130
-            }
             Repeater {
-                model: lineSource
-                VodItem {itemSource: model}
+                id: programRepeater
+                model: lineSource.programs
+                VodItem {
+                    itemSource: model
+                    focus: lineSource.index == 0 && model.index == -1
+                    onMoveLeft: {
+                        if (index != -1) {
+                            programRepeater.itemAt(index + 1).focus = false;
+                            programRepeater.itemAt(index).focus = true;
+                        }
+                    }
+                    onMoveRight: {
+                        if (index + 2 < lineSource.programs.count) {
+                            console.log(programRepeater.itemAt(index + 1));
+                            programRepeater.itemAt(index + 1).focus = false;
+                            programRepeater.itemAt(index + 2).focus = true;
+                        }
+                    }
+                    onMoveUp: console.log(index)
+                    onMoveDown: console.log(index)
+                }
+                // TODO: update focus
             }
         }
     }
