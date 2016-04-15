@@ -7,6 +7,13 @@ Item {
     property int wrapperHeight: 210
     property int headerHeight: headerFontSize + headerMargin * 2
     property var lineSource: undefined
+    property int leftMargin: 0
+    property int wrapperLeftMargin: 0
+
+    signal moveHorizontal(var item)
+    signal moveVertical()
+
+    id: line
     height: wrapperHeight + headerHeight
     anchors.left: parent.left
     anchors.right: parent.right
@@ -24,6 +31,7 @@ Item {
         id: wrapper
         anchors.fill: parent
         anchors.topMargin: headerHeight
+        anchors.leftMargin: wrapperLeftMargin
         Row {
             anchors.fill: parent
             Repeater {
@@ -34,21 +42,35 @@ Item {
                     focus: lineSource.index == 0 && model.index == -1
                     onMoveLeft: {
                         if (index != -1) {
-                            programRepeater.itemAt(index + 1).focus = false;
-                            programRepeater.itemAt(index).focus = true;
+                            var currentItem = programRepeater.itemAt(index + 1),
+                                previousItem = programRepeater.itemAt(index);
+                            currentItem.focus = false;
+                            previousItem.focus = true;
+                            if (leftMargin - previousItem.totalWidth < 0) {
+                                wrapperLeftMargin += currentItem.totalWidth;
+                            } else {
+                                leftMargin -= previousItem.totalWidth;
+                            }
+                            moveHorizontal(previousItem);
                         }
                     }
                     onMoveRight: {
                         if (index + 2 < lineSource.programs.count) {
-                            console.log(programRepeater.itemAt(index + 1));
-                            programRepeater.itemAt(index + 1).focus = false;
-                            programRepeater.itemAt(index + 2).focus = true;
+                            var currentItem = programRepeater.itemAt(index + 1),
+                                nextItem = programRepeater.itemAt(index + 2);
+                            currentItem.focus = false;
+                            nextItem.focus = true;
+                            if (leftMargin + currentItem.totalWidth + nextItem.totalWidth > line.width) {
+                                wrapperLeftMargin -= currentItem.totalWidth;
+                            } else {
+                                leftMargin += currentItem.totalWidth;
+                            }
+                            moveHorizontal(nextItem);
                         }
                     }
                     onMoveUp: console.log(index)
                     onMoveDown: console.log(index)
                 }
-                // TODO: update focus
             }
         }
     }

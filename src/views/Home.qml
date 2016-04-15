@@ -67,13 +67,9 @@ View {
                 height: gridViewItemHeight
                 border.width: borderWidth
                 anchors.left: parent.left
-                anchors.leftMargin: {
-                    return columnIndex * gridViewItemWidth; 
-                }
+                anchors.leftMargin: columnIndex * gridViewItemWidth
                 anchors.top: parent.top
-                anchors.topMargin: {
-                    return rowIndex * gridViewItemHeight;
-                }
+                anchors.topMargin: rowIndex * gridViewItemHeight
             }
         }
     }

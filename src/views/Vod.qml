@@ -6,9 +6,20 @@ View {
     property var source: undefined
     property string imageServerPath: undefined
     property var dataSource: undefined
+    property int rowIndex: 0
+    property int columnIndex: 0
+    property int currentLeftMargin: 0
+    property int lineHeaderFontSize: 22
+    property int lineHeaderMargin: 10
+    property int lineHeaderHeight: lineHeaderFontSize + lineHeaderMargin * 2
+    property int lineWrapperHeight: 210
+    property int itemWrapperWidth: 0
+    property int vodItemTopMargin: 220
+    property int vodItemLeftMargin: 110
 
     signal back()
 
+    id: vodHome
     anchors.fill: parent
     VodHeader {
         id: vodHeader
@@ -20,22 +31,35 @@ View {
     ListModel {id: vodModel}
     Item {
         anchors.fill: parent
-        anchors.topMargin: 220
-        anchors.leftMargin: 110
+        anchors.topMargin: vodItemTopMargin
+        anchors.leftMargin: vodItemLeftMargin
         Column {
             anchors.fill: parent
             Repeater {
-                model: vodModel 
-                VodLine {lineSource: model}
+                model: vodModel
+                VodLine {
+                    headerFontSize: lineHeaderFontSize
+                    headerMargin: lineHeaderMargin
+                    headerHeight: lineHeaderHeight
+                    wrapperHeight: lineWrapperHeight
+                    lineSource: model
+                    onMoveHorizontal: {
+                        currentLeftMargin = this.leftMargin;
+                        itemWrapperWidth = item.itemWidth;
+                    }
+                }
             }
         }
         Border {
             id: focus
-            width: 100
-            height: 100
+            width: itemWrapperWidth
+            height: lineWrapperHeight
             border.width: 5
             anchors.left: parent.left
+            anchors.leftMargin: currentLeftMargin
             anchors.top: parent.top
+            anchors.topMargin: lineHeaderHeight + rowIndex * (lineHeaderHeight + lineWrapperHeight)
+            visible: currentLeftMargin == 0 ? false : true
         }
     }
     function init(channel) {

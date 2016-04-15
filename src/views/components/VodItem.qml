@@ -4,8 +4,9 @@ Item {
     property var itemSource: undefined
     property bool isTrueItem: itemSource.index != "-1"
     property int itemWidth: isTrueItem ? 257 : 143
-    property int itemMargin: 10
-    property string backgroundColor: isTrueItem ? "transparent" : "#cccccc"
+    property int itemMargin: 20
+    property int totalWidth: itemWidth + itemMargin
+    property string backgroundColor: isTrueItem ? "transparent" : (focus ? "#ff6600" : "#cccccc")
     property string backgroundImage: isTrueItem ? itemSource.background : "../../images/underline_grey.png"
     property int backgroundPositionX: isTrueItem ? 0 : 34
     property int backgroundPositionY: isTrueItem ? 0 : 130
