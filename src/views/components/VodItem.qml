@@ -2,14 +2,14 @@ import QtQuick 2.2
 
 Item {
     property var itemSource: undefined
-    property bool isTrueItem: itemSource.index != "-1"
-    property int itemWidth: isTrueItem ? 257 : 143
+    property bool isFirstItem: itemSource.index == 0
+    property int itemWidth: !isFirstItem ? 257 : 143
     property int itemMargin: 20
     property int totalWidth: itemWidth + itemMargin
-    property string backgroundColor: isTrueItem ? "transparent" : (focus ? "#ff6600" : "#cccccc")
-    property string backgroundImage: isTrueItem ? itemSource.background : "../../images/underline_grey.png"
-    property int backgroundPositionX: isTrueItem ? 0 : 34
-    property int backgroundPositionY: isTrueItem ? 0 : 130
+    property string backgroundColor: !isFirstItem ? "transparent" : (focus ? "#ff6600" : "#cccccc")
+    property string backgroundImage: !isFirstItem ? itemSource.background : "../../images/underline_grey.png"
+    property int backgroundPositionX: !isFirstItem ? 0 : 34
+    property int backgroundPositionY: !isFirstItem ? 0 : 130
 
     signal moveLeft(int index);
     signal moveRight(int index);
@@ -33,15 +33,15 @@ Item {
         Image {
             id: image
             anchors.top: parent.top 
-            anchors.bottom: isTrueItem ? parent.bottom : undefined
+            anchors.bottom: !isFirstItem ? parent.bottom : undefined
             anchors.left: parent.left
-            anchors.right: isTrueItem ? parent.right : undefined
+            anchors.right: !isFirstItem ? parent.right : undefined
             anchors.leftMargin: backgroundPositionX
             anchors.topMargin: backgroundPositionY
             source: backgroundImage
         }
         Text {
-            visible: !isTrueItem
+            visible: isFirstItem
             text: "tout afficher"
             font.pixelSize: 18
             color: "#3c3c3c"

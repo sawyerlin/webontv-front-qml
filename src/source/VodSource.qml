@@ -13,12 +13,12 @@ Source {
                     size: category.nbPrograms,
                     programs: []
                 };
-                transformedCategory.programs.push({index: "-1"});
+                transformedCategory.programs.push({index: 0});
                 for (var j in category.Programs) {
                     var program = category.Programs[j];
                     transformedCategory.programs.push({
                         id: program.id,
-                        index: j,
+                        index: parseInt(j) + 1,
                         title: program.title,
                         background: config.imageServerPath + program.imageFilepath
                     });

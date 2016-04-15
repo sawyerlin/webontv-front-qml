@@ -7,7 +7,6 @@ View {
     property string imageServerPath: undefined
     property var dataSource: undefined
     property int rowIndex: 0
-    property int columnIndex: 0
     property int currentLeftMargin: 0
     property int lineHeaderFontSize: 22
     property int lineHeaderMargin: 10
@@ -36,6 +35,7 @@ View {
         Column {
             anchors.fill: parent
             Repeater {
+                id: lineRepeater
                 model: vodModel
                 VodLine {
                     headerFontSize: lineHeaderFontSize
@@ -46,6 +46,26 @@ View {
                     onMoveHorizontal: {
                         currentLeftMargin = this.leftMargin;
                         itemWrapperWidth = item.itemWidth;
+                    }
+                    onMoveVertical: {
+                        var index = this.lineSource.index;
+                        if (isUp) {
+                            if (index > 0) {
+                                var currentLine = lineRepeater.itemAt(index),
+                                    previousLine = lineRepeater.itemAt(index - 1);
+                                currentLine.unSetFocus();
+                                previousLine.setFocus();
+                                rowIndex --;
+                            }
+                        } else {
+                            if (index + 1 < vodModel.count) {
+                                var currentLine = lineRepeater.itemAt(index),
+                                    nextLine = lineRepeater.itemAt(index + 1);
+                                currentLine.unSetFocus();
+                                nextLine.setFocus();
+                                rowIndex ++;
+                            }
+                        }
                     }
                 }
             }

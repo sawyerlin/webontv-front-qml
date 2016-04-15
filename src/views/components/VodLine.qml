@@ -1,17 +1,18 @@
 import QtQuick 2.2
 
 Item {
+    property var lineSource: undefined
     property alias headerName: header.text
     property int headerFontSize : 22
     property int headerMargin: 10
     property int wrapperHeight: 210
     property int headerHeight: headerFontSize + headerMargin * 2
-    property var lineSource: undefined
     property int leftMargin: 0
     property int wrapperLeftMargin: 0
+    property int currentIndex: 0
 
     signal moveHorizontal(var item)
-    signal moveVertical()
+    signal moveVertical(bool isUp)
 
     id: line
     height: wrapperHeight + headerHeight
@@ -35,15 +36,16 @@ Item {
         Row {
             anchors.fill: parent
             Repeater {
-                id: programRepeater
+                id: itemRepeater
                 model: lineSource.programs
                 VodItem {
                     itemSource: model
-                    focus: lineSource.index == 0 && model.index == -1
+                    focus: lineSource.index == 0 && model.index == currentIndex
                     onMoveLeft: {
-                        if (index != -1) {
-                            var currentItem = programRepeater.itemAt(index + 1),
-                                previousItem = programRepeater.itemAt(index);
+                        if (index > 0) {
+                            currentIndex = index;
+                            var currentItem = itemRepeater.itemAt(index),
+                                previousItem = itemRepeater.itemAt(index - 1);
                             currentItem.focus = false;
                             previousItem.focus = true;
                             if (leftMargin - previousItem.totalWidth < 0) {
@@ -55,9 +57,10 @@ Item {
                         }
                     }
                     onMoveRight: {
-                        if (index + 2 < lineSource.programs.count) {
-                            var currentItem = programRepeater.itemAt(index + 1),
-                                nextItem = programRepeater.itemAt(index + 2);
+                        if (index + 1 < lineSource.programs.count) {
+                            currentIndex = index;
+                            var currentItem = itemRepeater.itemAt(index),
+                                nextItem = itemRepeater.itemAt(index + 1);
                             currentItem.focus = false;
                             nextItem.focus = true;
                             if (leftMargin + currentItem.totalWidth + nextItem.totalWidth > line.width) {
@@ -68,10 +71,16 @@ Item {
                             moveHorizontal(nextItem);
                         }
                     }
-                    onMoveUp: console.log(index)
-                    onMoveDown: console.log(index)
+                    onMoveUp: moveVertical(true)
+                    onMoveDown: moveVertical(false)
                 }
             }
         }
+    }
+    function setFocus() {
+        itemRepeater.itemAt(currentIndex).focus = true;
+    }
+    function unSetFocus() {
+        itemRepeater.itemAt(currentIndex).focus = false;
     }
 }
