@@ -29,7 +29,7 @@ Rectangle {
                 font.bold: true
                 font.pixelSize: 20
                 anchors.left: parent.left
-                anchors.leftMargin: 10
+                anchors.leftMargin: 30
                 anchors.top: parent.top
                 anchors.topMargin: 10
             }

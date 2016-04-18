@@ -1,5 +1,7 @@
 import QtQuick 2.2
 
+import "../../../utils/"
+
 Item {
     property real duration: 0
     property real positionTime: 0
@@ -7,6 +9,8 @@ Item {
 
     signal end()
 
+
+    Utils{id: utils}
     Item {
         id: timeItem
         anchors.top: parent.top
@@ -61,7 +65,7 @@ Item {
         }
     }
     function setDuration(time) {
-        duration = timeToMS(time);
+        duration = utils.timeToMS(time);
         imageTimer.start();
     }
     function timeFromMS(ms) {
@@ -80,14 +84,5 @@ Item {
         }
         var time = hours + ':' + minutes + ':' + seconds;
         return time;
-    }
-    function timeToMS(time) {
-        var a = time.split(':'),
-        l = a.length,
-        r = 0;
-        r += +a[l - 1] || 0;
-        r += (+a[l - 2] * 60) || 0;
-        r += (+a[l - 3] * 3600) || 0;
-        return r * 1000;
     }
 }

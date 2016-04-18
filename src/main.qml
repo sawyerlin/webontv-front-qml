@@ -37,7 +37,6 @@ Rectangle {
     }
     Vod {
         id: vodView
-        imageServerPath: config.imageServerPath
         source: VodSource {config: config}
         onBack: {
             var channelId = 3;

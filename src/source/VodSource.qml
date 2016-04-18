@@ -20,6 +20,8 @@ Source {
                         id: program.id,
                         index: parseInt(j) + 1,
                         title: program.title,
+                        duration: program.duration,
+                        startDate: program.startDate,
                         background: config.imageServerPath + program.imageFilepath
                     });
                 }

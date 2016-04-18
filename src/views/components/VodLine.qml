@@ -7,11 +7,12 @@ Item {
     property int headerMargin: 10
     property int wrapperHeight: 210
     property int headerHeight: headerFontSize + headerMargin * 2
+    property int totalHeight: wrapperHeight + headerHeight
     property int leftMargin: 0
     property int wrapperLeftMargin: 0
     property int currentIndex: 0
 
-    signal moveHorizontal(var item)
+    signal moveHorizontal()
     signal moveVertical(bool isUp)
 
     id: line
@@ -43,7 +44,7 @@ Item {
                     focus: lineSource.index == 0 && model.index == currentIndex
                     onMoveLeft: {
                         if (index > 0) {
-                            currentIndex = index;
+                            currentIndex = index - 1;
                             var currentItem = itemRepeater.itemAt(index),
                                 previousItem = itemRepeater.itemAt(index - 1);
                             currentItem.focus = false;
@@ -53,12 +54,12 @@ Item {
                             } else {
                                 leftMargin -= previousItem.totalWidth;
                             }
-                            moveHorizontal(previousItem);
+                            moveHorizontal();
                         }
                     }
                     onMoveRight: {
                         if (index + 1 < lineSource.programs.count) {
-                            currentIndex = index;
+                            currentIndex = index + 1;
                             var currentItem = itemRepeater.itemAt(index),
                                 nextItem = itemRepeater.itemAt(index + 1);
                             currentItem.focus = false;
@@ -68,7 +69,7 @@ Item {
                             } else {
                                 leftMargin += currentItem.totalWidth;
                             }
-                            moveHorizontal(nextItem);
+                            moveHorizontal();
                         }
                     }
                     onMoveUp: moveVertical(true)
@@ -76,6 +77,9 @@ Item {
                 }
             }
         }
+    }
+    function getCurrentItemWidth() {
+        return itemRepeater.itemAt(currentIndex).itemWidth;
     }
     function setFocus() {
         itemRepeater.itemAt(currentIndex).focus = true;
