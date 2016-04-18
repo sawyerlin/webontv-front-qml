@@ -13,10 +13,11 @@ Item {
     property int backgroundPositionX: !isFirstItem ? 0 : 34
     property int backgroundPositionY: !isFirstItem ? 0 : 130
 
-    signal moveLeft(int index);
-    signal moveRight(int index);
-    signal moveUp(int index);
-    signal moveDown(int index);
+    signal moveLeft(int index)
+    signal moveRight(int index)
+    signal moveUp(int index)
+    signal moveDown(int index)
+    signal enter(int id)
 
     anchors.top: parent.top
     anchors.bottom: parent.bottom
@@ -128,6 +129,9 @@ Item {
             break;
             case Qt.Key_Down:
             moveDown(itemSource.index);
+            break;
+            case Qt.Key_Return:
+            enter(isFirstItem ? itemSource.id : undefined);
             break;
         }
     }

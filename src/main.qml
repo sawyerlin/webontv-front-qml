@@ -9,7 +9,7 @@ Rectangle {
     property int applicationWidth: 1280
     property int applicationHeight: 720
     property var currentView: homeView
-    property var views: [homeView, playerView, vodView]
+    property var views: [homeView, playerView, vodView, categoryView, testVodPlayerView]
     width: applicationWidth
     height: applicationHeight
     color: "white"
@@ -39,9 +39,30 @@ Rectangle {
         id: vodView
         source: VodSource {config: config}
         onBack: {
-            var channelId = 3;
             playerView.start(channelId);
             showView(playerView)
+        }
+        onCategoryClicked: {
+            vodView.currentLine.unSetFocus();
+            showView(categoryView);
+        }
+        onProgramClicked: {
+            vodView.currentLine.unSetFocus();
+            showView(testVodPlayerView);
+        }
+    }
+    Category {
+        id: categoryView
+        onBack: {
+            showView(vodView)
+            vodView.currentLine.setFocus();
+        }
+    }
+    TestVodPlayer {
+        id: testVodPlayerView
+        onBack: {
+            showView(vodView)
+            vodView.currentLine.setFocus();
         }
     }
     Component.onCompleted: {

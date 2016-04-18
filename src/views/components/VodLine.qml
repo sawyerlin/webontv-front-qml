@@ -14,6 +14,8 @@ Item {
 
     signal moveHorizontal()
     signal moveVertical(bool isUp)
+    signal firstItemClicked(int id)
+    signal otherItemClicked(int id)
 
     id: line
     height: wrapperHeight + headerHeight
@@ -74,6 +76,13 @@ Item {
                     }
                     onMoveUp: moveVertical(true)
                     onMoveDown: moveVertical(false)
+                    onEnter: {
+                        if (id == undefined) {
+                            firstItemClicked(lineSource.id);
+                        } else {
+                            otherItemClicked(id);
+                        }
+                    }
                 }
             }
         }

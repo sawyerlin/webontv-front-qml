@@ -13,7 +13,9 @@ View {
     property int vodWrapperTopMargin: 0
     property int vodWrapperMovingMargin: 50
 
-    signal back()
+    signal back(int channelId)
+    signal categoryClicked()
+    signal programClicked()
 
     id: vodHome
     anchors.fill: parent
@@ -75,6 +77,12 @@ View {
                             currentLine = nextLine;
                         }
                     }
+                    onFirstItemClicked: {
+                        categoryClicked(id);
+                    }
+                    onOtherItemClicked: {
+                        programClicked(id);
+                    }
                 }
             }
         }
@@ -87,6 +95,17 @@ View {
             anchors.top: parent.top
             anchors.topMargin: currentLine ? currentLine.headerHeight + currentRow* currentLine.totalHeight + vodWrapperTopMargin : 0
             visible: currentLine ? currentLine.leftMargin > 0 : false
+        }
+        Keys.onPressed: {
+            // BackSpace
+            if (event.key == 16777219) {
+                back(vodSource.channelId);
+                vodModel.clear();
+                vodSource = undefined;
+                currentLine = undefined;
+                currentRow = 0;
+                vodWrapperTopMargin = 0;
+            }
         }
     }
     function init(channel) {
