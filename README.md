@@ -1,7 +1,7 @@
 # WEBONTV QML
 
 ### TODO
-    * Vod Home
+    * Category
     * Vod Player (Reuse of Live Player)
     * Advertisement
     * FreeBox Player
