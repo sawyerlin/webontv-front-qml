@@ -17,7 +17,7 @@ Item {
     signal moveRight(int index)
     signal moveUp(int index)
     signal moveDown(int index)
-    signal enter(int id)
+    signal enter(var id)
 
     anchors.top: parent.top
     anchors.bottom: parent.bottom
@@ -92,7 +92,7 @@ Item {
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    text: itemSource.title
+                    text: itemSource.title || ""
                     elide: Text.ElideRight
                 }
                 Text {
@@ -131,7 +131,7 @@ Item {
             moveDown(itemSource.index);
             break;
             case Qt.Key_Return:
-            enter(isFirstItem ? itemSource.id : undefined);
+            enter(isFirstItem ? undefined : itemSource.id);
             break;
         }
     }

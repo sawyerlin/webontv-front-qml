@@ -11,14 +11,18 @@ Item {
         return r * 1000;
     }
     function timeToHHMMSS(time) {
-        var a = time.split(':'),
-        heures = a[0],
-        minutes = a[1],
-        seconds = a[2];
-        if (heures != '00') {
-            return heures + ':' + minutes + ':' + seconds;
+        if (time) {
+            var a = time.split(':'),
+            heures = a[0],
+            minutes = a[1],
+            seconds = a[2];
+            if (heures != '00') {
+                return heures + ':' + minutes + ':' + seconds;
+            } else {
+                return minutes + ':' + seconds;
+            }
         } else {
-            return minutes + ':' + seconds;
+            return "";
         }
     }
     function getDays(time) {

@@ -27,9 +27,7 @@ View {
     signal play(int channelId)
 
     anchors.fill: parent
-    Image {
-        source: imageBackground 
-    }
+    Image {source: imageBackground}
     Rectangle {
         clip: true;
         anchors.fill: parent
